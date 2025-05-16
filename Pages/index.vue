@@ -23,6 +23,7 @@
           @add-to-cart="handleAddToCart"
         />
       </div>
+      <CartSidebar :visible="showSidebar" @close="showSidebar = false" />
     </main>
     <footer class="footer">
       <p>&copy; 2025 - Meu E-commerce</p>
@@ -30,20 +31,22 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue'
+import CartSidebar from '../Components/CartSidebar.vue'
+import { useCartStore } from '../Stores/cart'
 import { useProducts } from '../Composables/useProducts'
 import ProductCard from '../Components/ProductCard.vue'
 import Filter from '../Components/Filter.vue'
-import { ref, computed, onMounted } from 'vue'
-import { useCartStore } from '../Stores/cart'
 
+const showSidebar = ref(false)
 const cart = useCartStore()
-
+const { products, fetchProducts } = useProducts()
+const selectedCategory = ref('')
 
 function handleAddToCart(product) {
   cart.addToCart(product)
+  showSidebar.value = true  
 }
-const { products, fetchProducts } = useProducts()
-const selectedCategory = ref('')
 
 const categories = computed(() => [
   ...new Set(products.value.map(p => p.category))
@@ -53,12 +56,13 @@ const filteredProducts = computed(() => {
   if (!selectedCategory.value) return products.value
   return products.value.filter(p => p.category === selectedCategory.value)
 })
+
 onMounted(() => {
   fetchProducts()
   cart.loadCart()
 })
-
 </script>
+
 
 <style scoped>
 .page {
@@ -70,7 +74,7 @@ onMounted(() => {
 
 .header {
   background-color: #111;
-  padding: 1rem;
+  
   color: #fff;
   top: 0;
   margin-bottom: 2rem;

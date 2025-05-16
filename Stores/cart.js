@@ -34,10 +34,7 @@ export const useCartStore = defineStore('cart', {
       if (process.client) {
         localStorage.setItem('cart', JSON.stringify(this.items))
       }
-      onMounted(() => {
-        fetchProducts()
-        cart.loadCart()
-      })
     }
+    
   }
 })

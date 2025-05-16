@@ -1,23 +1,20 @@
 // composables/useProducts.js
 import { ref } from 'vue'
-import axios from 'axios'
 
-export const useProducts = () => {
+export function useProducts() {
   const products = ref([])
-  const loading = ref(false)
-  const error = ref(null)
 
-  const fetchProducts = async () => {
-    loading.value = true
+  async function fetchProducts() {
     try {
-      const res = await axios.get('https://fakestoreapi.com/products')
-      products.value = res.data
-    } catch (err) {
-      error.value = err
-    } finally {
-      loading.value = false
+      const res = await fetch('https://fakestoreapi.com/products') // ou sua API real
+      products.value = await res.json()
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error)
     }
   }
 
-  return { products, fetchProducts, loading, error }
+  return {
+    products,
+    fetchProducts
+  }
 }
