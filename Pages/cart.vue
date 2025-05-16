@@ -1,14 +1,14 @@
-<!-- pages/cart.vue -->
 <template>
-  
-    <header class="header">
-      <label>Meu E-commerce</label>
-      <nav class="nav">
-        <NuxtLink to="/">Home</NuxtLink>
-        <NuxtLink to="/cart">Carrinho</NuxtLink>
-      </nav>
-    </header>
-
+  <header class="header">
+    <label><a href="/">Meu E-commerce</a></label>
+    <nav class="nav">
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/cart" class="nav-link">
+        <ShoppingBagIcon class="icon" />
+        <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
+      </NuxtLink>
+    </nav>
+  </header>
 
   <div class="cart-page">
     <h1>Seu Carrinho</h1>
@@ -23,53 +23,62 @@
         <div class="info">
           <h3>{{ item.title }}</h3>
           <p>Preço: R$ {{ item.price.toFixed(2) }}</p>
-          Quantidade: <input type="number" v-model.number="item.quantity" @change="update(item)" min="1" />
+          Quantidade:
+          <input type="number" v-model.number="item.quantity" @change="update(item)" min="1" />
           <button @click="remove(item.id)">Remover</button>
         </div>
       </div>
 
-      <div class="total">
-        Total: R$ {{ total.toFixed(2) }}
-      </div>
-    <NuxtLink to="/checkout" @click="goToCart" class="checkout-btn">Finalizar Compra</NuxtLink>
+      <div class="total">Total: R$ {{ total.toFixed(2) }}</div>
+      <NuxtLink to="/checkout" @click="goToCart" class="checkout-btn">Finalizar Compra</NuxtLink>
     </div>
-    
   </div>
+
   <footer class="footer">
-        <p>&copy; 2025 - Meu E-commerce</p>
-    </footer>
-    
+    <p>&copy; 2025 - Meu E-commerce</p>
+  </footer>
 </template>
 
 <script setup>
 import { computed, onMounted } from 'vue'
+import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
 import { useCartStore } from '../Stores/cart'
-const router = useRouter()
+import { useRouter } from 'vue-router'
 
-function goToCart() {
+const router = useRouter()
+const cart = useCartStore()
+
+const goToCart = () => {
   router.push('/checkout')
 }
-const cart = useCartStore()
+
+const cartCount = computed(() =>
+  cart.items.reduce((sum, item) => sum + item.quantity, 0)
+)
+
+const total = computed(() =>
+  cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+)
 
 onMounted(() => {
   cart.loadCart()
 })
 
-function update(item) {
+const update = (item) => {
   cart.updateQuantity(item.id, item.quantity)
 }
 
-function remove(id) {
+const remove = (id) => {
   cart.removeItem(id)
 }
-
-const total = computed(() =>
-  cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-)
 </script>
 
 <style scoped>
-
+label a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+}
 .header {
   background-color: #111;
   
@@ -80,6 +89,19 @@ const total = computed(() =>
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  pointer-events: none; 
 }
 .header label {
   font-size: 1.5rem;
@@ -103,6 +125,18 @@ const total = computed(() =>
 }
 
 .nav a:hover {
+  color: #00bfff;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+.nav-link {
+  position: relative; 
+  display: inline-block; 
+}
+.nav-link:hover .icon {
   color: #00bfff;
 }
 .cart-page {

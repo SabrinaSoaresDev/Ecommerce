@@ -1,10 +1,13 @@
 <template>
   <header>  
     <div class="header">
-      <label>Meu E-commerce</label>
+      <label><a href="/">Meu E-commerce</a></label>
       <nav class="nav">
         <NuxtLink to="/">Home</NuxtLink>
-        <NuxtLink to="/cart">Carrinho</NuxtLink>
+        <NuxtLink to="/cart" class="nav-link">
+          <ShoppingBagIcon class="icon" />
+          <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
+        </NuxtLink>
       </nav>
     </div>
   </header>
@@ -32,21 +35,51 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
 import CartSidebar from '../Components/CartSidebar.vue'
 import { useCartStore } from '../Stores/cart'
 import { useProducts } from '../Composables/useProducts'
 import ProductCard from '../Components/ProductCard.vue'
 import Filter from '../Components/Filter.vue'
+import { useToast } from 'vue-toastification'
 
 const showSidebar = ref(false)
 const cart = useCartStore()
 const { products, fetchProducts } = useProducts()
 const selectedCategory = ref('')
+const toast = useToast()
+
+const cartCount = computed(() =>
+  cart.items.reduce((sum, item) => sum + item.quantity, 0)
+)
 
 function handleAddToCart(product) {
   cart.addToCart(product)
-  showSidebar.value = true  
+  showSidebar.value = true 
+  try{
+ toast.success(`${product.title} | Adicionado ao carrinho!`, {
+  position: 'top-left',
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: false,
+})
+}catch(err){
+
+   toast.error('Erro ao adicionar o produto!', {
+    position: 'top-left',
+    timeout: 2000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: false,
+  })
 }
+}
+
+ 
+
 
 const categories = computed(() => [
   ...new Set(products.value.map(p => p.category))
@@ -65,6 +98,11 @@ onMounted(() => {
 
 
 <style scoped>
+label a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+}
 .page {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f9f9f9;
@@ -82,6 +120,18 @@ onMounted(() => {
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
+}
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  pointer-events: none;
 }
 .header label {
   font-size: 1.5rem;
@@ -107,7 +157,18 @@ onMounted(() => {
 .nav a:hover {
   color: #00bfff;
 }
-
+.icon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+.nav-link {
+  position: relative; 
+  display: inline-block; 
+}
+.nav-link:hover .icon {
+  color: #00bfff;
+}
 .content {
   max-width: 1200px;
   margin: 0 auto;

@@ -8,6 +8,7 @@
       <option value="debito">Cartão de Débito</option>
       <option value="pix">PIX</option>
     </select>
+    <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.nomeCartao" placeholder="Nome do Cartão" />
     <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.numeroCartao" placeholder="Número do Cartão" />
     <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.validade" placeholder="Validade (MM/AA)" />
     <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.cvv" placeholder="CVV" />

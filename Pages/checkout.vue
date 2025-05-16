@@ -1,10 +1,13 @@
 <!-- pages/checkout.vue -->
 <template>
      <header class="header">
-      <label>Meu E-commerce</label>
+      <label><a href="/">Meu E-commerce</a></label>
       <nav class="nav">
         <NuxtLink to="/">Home</NuxtLink>
-        <NuxtLink to="/cart">Carrinho</NuxtLink>
+        <NuxtLink to="/cart" class="nav-link">
+            <ShoppingBagIcon class="icon" />
+            <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
+            </NuxtLink>
       </nav>
     </header>
   <div class="checkout-container">
@@ -31,13 +34,18 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
 import EnderecoForm from '../Components/EnderecoForm.vue'
 import PagamentoForm from '../Components/PagamentoForm.vue'
 import ResumoPedido from '../Components/ResumoPedido.vue'
 import { useCartStore } from '../Stores/cart'
 
+
 const cart = useCartStore()
 
+const cartCount = computed(() =>
+  cart.items.reduce((sum, item) => sum + item.quantity, 0)
+)
 const endereco = ref({
   nome: '',
   rua: '',
@@ -48,6 +56,7 @@ const endereco = ref({
 
 const pagamento = ref({
   metodo: '',
+  nomeCartao: '',
   numeroCartao: '',
   validade: '',
   cvv: ''
@@ -69,6 +78,11 @@ body {
   background-color: #ddd;
   font-family: Arial, sans-serif;
 }
+label a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+}
 .header {
   background-color: #111;
   
@@ -79,6 +93,18 @@ body {
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
+}
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  pointer-events: none; 
 }
 .header label {
   font-size: 1.5rem;
@@ -100,8 +126,19 @@ body {
   font-weight: 500;
   transition: color 0.3s ease;
 }
-
+.nav-link {
+  position: relative; 
+  display: inline-block; 
+}
 .nav a:hover {
+  color: #00bfff;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+.nav-link:hover .icon {
   color: #00bfff;
 }
 .checkout-container {
