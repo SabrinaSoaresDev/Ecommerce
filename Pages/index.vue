@@ -42,6 +42,8 @@ import { useProducts } from '../Composables/useProducts'
 import ProductCard from '../Components/ProductCard.vue'
 import Filter from '../Components/Filter.vue'
 import { useToast } from 'vue-toastification'
+import { useHead } from '#imports'
+
 
 const showSidebar = ref(false)
 const cart = useCartStore()
@@ -52,6 +54,9 @@ const toast = useToast()
 const cartCount = computed(() =>
   cart.items.reduce((sum, item) => sum + item.quantity, 0)
 )
+useHead({
+  title: 'Meu E-commerce',
+})
 
 function handleAddToCart(product) {
   cart.addToCart(product)

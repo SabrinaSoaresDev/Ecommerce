@@ -2,26 +2,80 @@
   <div class="form-section">
     <h2>Resumo do Pedido</h2>
 
-    <p><strong>Endereço:</strong> {{ endereco.rua }},{{ endereco.bairro }},{{ endereco.complemento }}, {{ endereco.cidade }} - {{ endereco.estado }}</p>
-    <p><strong>Pagamento:</strong> {{ pagamento.metodo }}</p>
+    <div class="resumo-content">
+      <div class="resumo-item">
+        <h3>Endereço de Entrega:</h3>
+        <template v-if="endereco.rua">
+          <p>{{ endereco.nome }}</p>
+          <p>{{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento ? '- ' + endereco.complemento : '' }}</p>
+          <p>{{ endereco.bairro }}, {{ endereco.cidade }} - {{ endereco.estado }}</p>
+          <p>CEP: {{ endereco.cep }}</p>
+        </template>
+        <p v-else class="empty-info">Nenhum endereço informado</p>
+      </div>
 
-    
-    <ul class="lista-itens">
-      <li v-for="item in items" :key="item.id">
-        {{ item.title }} - {{ item.quantity }}x R$ {{ item.price.toFixed(2) }} = 
-        <strong>R$ {{ (item.quantity * item.price).toFixed(2) }}</strong>
-      </li>
-    </ul>
+      <div class="resumo-item">
+        <h3>Método de Pagamento:</h3>
+        <template v-if="pagamento.metodo">
+          <p>{{ pagamento.metodo }}</p>
+          <template v-if="pagamento.metodo === 'cartao'">
+            <p>Cartão: **** **** **** {{ pagamento.numeroCartao.slice(-4) }}</p>
+            <p>Validade: {{ pagamento.validade }}</p>
+            <p>Titular: {{ pagamento.nomeCartao }}</p>
+          </template>
+        </template>
+        <p v-else class="empty-info">Nenhum método selecionado</p>
+      </div>
 
-    <p class="total"><strong>Total:</strong> R$ {{ total.toFixed(2) }}</p>
+      <div class="resumo-item total-section">
+        <h3>Total do Pedido:</h3>
+        <p class="total-value">R$ {{ total.toFixed(2) }}</p>
+      </div>
+    </div>
 
-    <button @click="$emit('confirmar')">Confirmar Compra</button>
+    <button 
+      @click="confirmar"
+      :disabled="loading"
+      :class="{ 'loading-button': loading }"
+    >
+      <span v-if="!loading">Confirmar Compra</span>
+      <span v-else>Processando...</span>
+    </button>
+
+    <div v-if="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
-defineProps(['endereco', 'pagamento', 'total', 'items'])
+const emit = defineEmits(['confirmar'])
+
+const props = defineProps({
+  endereco: {
+    type: Object,
+    required: true
+  },
+  pagamento: {
+    type: Object,
+    required: true
+  },
+  total: {
+    type: Number,
+    required: true
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  }
+})
+
+function confirmar() {
+  emit('confirmar')
+}
 </script>
+
+
 
 <style scoped>
 .form-section {
