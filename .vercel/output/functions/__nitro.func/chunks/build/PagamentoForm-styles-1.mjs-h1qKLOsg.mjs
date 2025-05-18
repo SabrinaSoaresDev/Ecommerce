@@ -1,0 +1,4 @@
+const PagamentoForm_vue_vue_type_style_index_0_scoped_e53dbcb8_lang = `.form-section[data-v-e53dbcb8]{margin-bottom:2rem}input[data-v-e53dbcb8],select[data-v-e53dbcb8]{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-color:#fff;border:1px solid #ccc;border-radius:6px;color:#333;display:block;font-size:1rem;margin-bottom:1rem;padding:.8rem;width:50%}select[data-v-e53dbcb8]{background-image:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5z"/></svg>');background-position:right .7rem center;background-repeat:no-repeat;background-size:1rem;cursor:pointer;padding-right:2.5rem}input[data-v-e53dbcb8]:focus,select[data-v-e53dbcb8]:focus{border-color:#007bff;box-shadow:0 0 0 3px #007bff33;outline:none}`;
+
+export { PagamentoForm_vue_vue_type_style_index_0_scoped_e53dbcb8_lang as P };
+//# sourceMappingURL=PagamentoForm-styles-1.mjs-h1qKLOsg.mjs.map

@@ -6,12 +6,12 @@
 - Vue.js
 - Pinia
 - Axios
-- SCSS
+- CSS
 
 ## Instalação
 
 ```bash
-git clone https://github.com/seuusuario/ecommerce-fake-store.git
-cd ecommerce-fake-store
+git clone https://github.com/seuusuario/ecommerce.git
+cd ecommerce
 npm install
 npm run dev
