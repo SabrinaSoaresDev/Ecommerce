@@ -11,7 +11,7 @@
 ## Instalação
 
 ```bash
-git clone https://github.com/seuusuario/ecommerce.git
+git clone https://github.com/SabrinaSoaresDev/Ecommerce
 cd ecommerce
 npm install
 npm run dev
