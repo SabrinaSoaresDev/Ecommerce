@@ -1,4 +1,6 @@
 <template>
+  <!-- Poderia ter componentizado o Header -->
+  <!-- Dados nao carrega na pagina de checkout -->
   <header class="header">
     <label><a href="/">Meu E-commerce</a></label>
     <nav class="nav">
@@ -13,206 +15,211 @@
   <div class="checkout-container">
     <h1>Finalizar Compra</h1>
 
+    <!-- Declarou componentes em portugues e ingles -->
     <EnderecoForm v-model="endereco" />
     <PagamentoForm v-model="pagamento" />
-    
+
     <!-- Passando items para o ResumoPedido -->
-  <ResumoPedido 
-  :endereco="endereco" 
-  :pagamento="pagamento" 
-  :total="total" 
-  @confirmar="confirmarCompra" 
-/>
+    <ResumoPedido
+      :endereco="endereco"
+      :pagamento="pagamento"
+      :total="total"
+      @confirmar="confirmarCompra"
+    />
 
     <ul>
       <h3>Itens no Carrinho:</h3>
       <li v-if="cart.items.length === 0">Seu carrinho está vazio.</li>
       <li v-for="item in cart.items" :key="item.id">
-        {{ item.title }} | Qtd: {{ item.quantity }} | R$ {{ item.price.toFixed(2) }}
+        {{ item.title }} | Qtd: {{ item.quantity }} | R$
+        {{ item.price.toFixed(2) }}
       </li>
     </ul>
   </div>
-
+  <!-- Poderia ter componentizado o footer -->
   <footer class="footer">
+    <!-- Poderia ter pegado o ano dinamico -->
     <p>&copy; 2025 - Meu E-commerce</p>
   </footer>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
-import EnderecoForm from '../Components/EnderecoForm.vue'
-import PagamentoForm from '../Components/PagamentoForm.vue'
-import ResumoPedido from '../Components/ResumoPedido.vue'
-import { useCartStore } from '../Stores/cart'
+import { ref, computed } from "vue";
+import { ShoppingBagIcon } from "@heroicons/vue/24/outline";
+import EnderecoForm from "../Components/EnderecoForm.vue";
+import PagamentoForm from "../Components/PagamentoForm.vue";
+import ResumoPedido from "../Components/ResumoPedido.vue";
+import { useCartStore } from "../Stores/cart";
 
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
-const cart = useCartStore()
-const router = useRouter()
-const loading = ref(false)
-const { $toast } = useNuxtApp()
+const cart = useCartStore();
+const router = useRouter();
+const loading = ref(false);
+const { $toast } = useNuxtApp();
 const cartCount = computed(() =>
   cart.items.reduce((sum, item) => sum + item.quantity, 0)
-)
+);
 
 const endereco = ref({
-  nome: '',
-  rua: '',
-  cidade: '',
-  cep: '',
-  estado: '',
-  bairro: '',
-  complemento: ''
-})
+  nome: "",
+  rua: "",
+  cidade: "",
+  cep: "",
+  estado: "",
+  bairro: "",
+  complemento: "",
+});
 
 const pagamento = ref({
-  metodo: '',
-  nomeCartao: '',
-  numeroCartao: '',
-  validade: '',
-  cvv: ''
-})
+  metodo: "",
+  nomeCartao: "",
+  numeroCartao: "",
+  validade: "",
+  cvv: "",
+});
 
-const enderecoErrors = ref({})
-const pagamentoErrors = ref({})
+const enderecoErrors = ref({});
+const pagamentoErrors = ref({});
 
 const total = computed(() =>
   cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-)
+);
 
 // Funções de validação
+/* Poderia ter usado no composables */
 function validarCEP(cep) {
-  const cepRegex = /^\d{5}-?\d{3}$/
-  return cepRegex.test(cep)
+  const cepRegex = /^\d{5}-?\d{3}$/;
+  return cepRegex.test(cep);
 }
 
+/* Poderia ter usado no composables */
 function validarNumeroCartao(numero) {
   // Validação básica de cartão (16 dígitos)
-  const cleaned = numero.replace(/\s+/g, '')
-  return /^\d{13,16}$/.test(cleaned)
+  const cleaned = numero.replace(/\s+/g, "");
+  return /^\d{13,16}$/.test(cleaned);
 }
-
+/* Poderia ter usado no composables */
 function validarCVV(cvv) {
-  return /^\d{3,4}$/.test(cvv)
+  return /^\d{3,4}$/.test(cvv);
 }
-
+/* Poderia ter usado no composables */
 function validarValidade(validade) {
-  if (!/^\d{2}\/\d{2}$/.test(validade)) return false
-  
-  const [mes, ano] = validade.split('/')
-  const now = new Date()
-  const currentYear = now.getFullYear() % 100
-  const currentMonth = now.getMonth() + 1
-  
+  if (!/^\d{2}\/\d{2}$/.test(validade)) return false;
+
+  const [mes, ano] = validade.split("/");
+  const now = new Date();
+  const currentYear = now.getFullYear() % 100;
+  const currentMonth = now.getMonth() + 1;
+
   // Cartão é válido até o último dia do mês
-  return (
-    (ano > currentYear) || 
-    (ano == currentYear && mes >= currentMonth)
-  )
+  return ano > currentYear || (ano == currentYear && mes >= currentMonth);
 }
 
 function validarCampos() {
-  let valido = true
-  enderecoErrors.value = {}
-  pagamentoErrors.value = {}
+  let valido = true;
+  enderecoErrors.value = {};
+  pagamentoErrors.value = {};
 
   // Validação de endereço
   if (!endereco.value.nome) {
-    enderecoErrors.value.nome = 'Nome é obrigatório'
-    valido = false
+    enderecoErrors.value.nome = "Nome é obrigatório";
+    valido = false;
   }
 
   if (!endereco.value.rua) {
-    enderecoErrors.value.rua = 'Rua é obrigatória'
-    valido = false
+    enderecoErrors.value.rua = "Rua é obrigatória";
+    valido = false;
   }
 
   if (!endereco.value.cidade) {
-    enderecoErrors.value.cidade = 'Cidade é obrigatória'
-    valido = false
+    enderecoErrors.value.cidade = "Cidade é obrigatória";
+    valido = false;
   }
 
   if (!endereco.value.cep) {
-    enderecoErrors.value.cep = 'CEP é obrigatório'
-    valido = false
+    enderecoErrors.value.cep = "CEP é obrigatório";
+    valido = false;
   } else if (!validarCEP(endereco.value.cep)) {
-    enderecoErrors.value.cep = 'CEP inválido (formato: 00000-000 ou 00000000)'
-    valido = false
+    enderecoErrors.value.cep = "CEP inválido (formato: 00000-000 ou 00000000)";
+    valido = false;
   }
 
   if (!endereco.value.estado) {
-    enderecoErrors.value.estado = 'Estado é obrigatório'
-    valido = false
+    enderecoErrors.value.estado = "Estado é obrigatório";
+    valido = false;
   }
 
   // Validação de pagamento
   if (!pagamento.value.metodo) {
-    pagamentoErrors.value.metodo = 'Método de pagamento é obrigatório'
-    valido = false
+    pagamentoErrors.value.metodo = "Método de pagamento é obrigatório";
+    valido = false;
   }
 
-  if (pagamento.value.metodo === 'cartao') {
+  if (pagamento.value.metodo === "cartao") {
     if (!pagamento.value.nomeCartao) {
-      pagamentoErrors.value.nomeCartao = 'Nome no cartão é obrigatório'
-      valido = false
+      pagamentoErrors.value.nomeCartao = "Nome no cartão é obrigatório";
+      valido = false;
     }
 
     if (!pagamento.value.numeroCartao) {
-      pagamentoErrors.value.numeroCartao = 'Número do cartão é obrigatório'
-      valido = false
+      pagamentoErrors.value.numeroCartao = "Número do cartão é obrigatório";
+      valido = false;
     } else if (!validarNumeroCartao(pagamento.value.numeroCartao)) {
-      pagamentoErrors.value.numeroCartao = 'Número do cartão inválido'
-      valido = false
+      pagamentoErrors.value.numeroCartao = "Número do cartão inválido";
+      valido = false;
     }
 
     if (!pagamento.value.validade) {
-      pagamentoErrors.value.validade = 'Validade é obrigatória'
-      valido = false
+      pagamentoErrors.value.validade = "Validade é obrigatória";
+      valido = false;
     } else if (!validarValidade(pagamento.value.validade)) {
-      pagamentoErrors.value.validade = 'Validade inválida (formato: MM/AA) ou cartão expirado'
-      valido = false
+      pagamentoErrors.value.validade =
+        "Validade inválida (formato: MM/AA) ou cartão expirado";
+      valido = false;
     }
 
     if (!pagamento.value.cvv) {
-      pagamentoErrors.value.cvv = 'CVV é obrigatório'
-      valido = false
+      pagamentoErrors.value.cvv = "CVV é obrigatório";
+      valido = false;
     } else if (!validarCVV(pagamento.value.cvv)) {
-      pagamentoErrors.value.cvv = 'CVV inválido (3 ou 4 dígitos)'
-      valido = false
+      pagamentoErrors.value.cvv = "CVV inválido (3 ou 4 dígitos)";
+      valido = false;
     }
   }
 
-  return valido
+  return valido;
 }
 
 async function confirmarCompra() {
   // Verifica se há itens no carrinho
   if (cart.items.length === 0) {
-    $toast.error('Seu carrinho está vazio. Adicione itens antes de finalizar a compra.')
-    return
+    $toast.error(
+      "Seu carrinho está vazio. Adicione itens antes de finalizar a compra."
+    );
+    return;
   }
 
   // Valida todos os campos
   if (!validarCampos()) {
-    $toast.error('Por favor, corrija os erros no formulário.')
-    return
+    $toast.error("Por favor, corrija os erros no formulário.");
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
     // Simula um processamento assíncrono
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    $toast.success('Compra finalizada com sucesso!')
-    cart.clearCart()
-    router.push('/success')
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    $toast.success("Compra finalizada com sucesso!");
+    cart.clearCart();
+    router.push("/success");
   } catch (error) {
-    $toast.error('Ocorreu um erro ao processar sua compra. Tente novamente.')
-    console.error(error)
+    $toast.error("Ocorreu um erro ao processar sua compra. Tente novamente.");
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
@@ -224,18 +231,18 @@ body {
   background-color: #ddd;
   font-family: Arial, sans-serif;
 }
-label a{
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.5rem;
+label a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
 }
 .header {
   background-color: #111;
-  
+
   color: #fff;
   top: 0;
   margin-bottom: 2rem;
-  padding: 1.3rem ;
+  padding: 1.3rem;
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
@@ -244,13 +251,13 @@ label a{
   position: absolute;
   top: -6px;
   right: -10px;
-  background-color: red;
-  color: white;
+  background-color: red; /* Manter padrão das cores utilizando o hexadecimal */
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   font-size: 0.7rem;
   padding: 2px 6px;
   border-radius: 50%;
   font-weight: bold;
-  pointer-events: none; 
+  pointer-events: none;
 }
 .header label {
   font-size: 1.5rem;
@@ -273,8 +280,8 @@ label a{
   transition: color 0.3s ease;
 }
 .nav-link {
-  position: relative; 
-  display: inline-block; 
+  position: relative;
+  display: inline-block;
 }
 .nav a:hover {
   color: #00bfff;
@@ -282,7 +289,7 @@ label a{
 .icon {
   width: 20px;
   height: 20px;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
 }
 .nav-link:hover .icon {
   color: #00bfff;
@@ -362,10 +369,10 @@ button:hover {
   }
 }
 .footer {
-        background-color: #000;
-        color: #fff;
-        text-align: center;
-        padding: 1rem;
-      }
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
 </style>
 

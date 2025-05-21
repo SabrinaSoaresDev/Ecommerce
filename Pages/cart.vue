@@ -1,4 +1,5 @@
 <template>
+  <!-- Poderia ter componentizado o Header -->
   <header class="header">
     <label><a href="/">Meu E-commerce</a></label>
     <nav class="nav">
@@ -19,73 +20,83 @@
 
     <div v-else>
       <div class="cart-item" v-for="item in cart.items" :key="item.id">
+        <!-- Poderia ter  componentizado -->
         <img :src="item.image" alt="imagem" />
         <div class="info">
           <h3>{{ item.title }}</h3>
           <p>Preço: R$ {{ item.price.toFixed(2) }}</p>
           Quantidade:
-          <input type="number" v-model.number="item.quantity" @change="update(item)" min="1" />
+          <input
+            type="number"
+            v-model.number="item.quantity"
+            @change="update(item)"
+            min="1"
+          />
+          <!-- Poderia ter adicionado aria-label -->
           <button @click="remove(item.id)">Remover</button>
         </div>
       </div>
 
       <div class="total">Total: R$ {{ total.toFixed(2) }}</div>
-      <NuxtLink to="/checkout" @click="goToCart" class="checkout-btn">Finalizar Compra</NuxtLink>
+      <NuxtLink to="/checkout" @click="goToCart" class="checkout-btn"
+        >Finalizar Compra</NuxtLink
+      >
     </div>
   </div>
-
+  <!-- Poderia ter componentizado o Footer -->
   <footer class="footer">
+    <!-- Poderia ter pegado o ano dinamico -->
     <p>&copy; 2025 - Meu E-commerce</p>
   </footer>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
-import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
-import { useCartStore } from '../Stores/cart'
-import { useRouter } from 'vue-router'
+import { computed, onMounted } from "vue";
+import { ShoppingBagIcon } from "@heroicons/vue/24/outline";
+import { useCartStore } from "../Stores/cart";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
-const cart = useCartStore()
+const router = useRouter();
+const cart = useCartStore();
 
 const goToCart = () => {
-  router.push('/checkout')
-}
+  router.push("/checkout");
+};
 
 const cartCount = computed(() =>
   cart.items.reduce((sum, item) => sum + item.quantity, 0)
-)
+);
 
 const total = computed(() =>
   cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-)
+);
 
 onMounted(() => {
-  cart.loadCart()
-})
+  cart.loadCart();
+});
 
 const update = (item) => {
-  cart.updateQuantity(item.id, item.quantity)
-}
+  cart.updateQuantity(item.id, item.quantity);
+};
 
 const remove = (id) => {
-  cart.removeItem(id)
-}
+  cart.removeItem(id);
+};
 </script>
 
 <style scoped>
-label a{
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.5rem;
+label a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
 }
 .header {
   background-color: #111;
-  
+
   color: #fff;
   top: 0;
   margin-bottom: 2rem;
-  padding: 1.3rem ;
+  padding: 1.3rem;
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
@@ -95,13 +106,13 @@ label a{
   position: absolute;
   top: -6px;
   right: -10px;
-  background-color: red;
-  color: white;
+  background-color: red; /* Manter padrão das cores utilizando o hexadecimal */
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   font-size: 0.7rem;
   padding: 2px 6px;
   border-radius: 50%;
   font-weight: bold;
-  pointer-events: none; 
+  pointer-events: none;
 }
 .header label {
   font-size: 1.5rem;
@@ -130,11 +141,11 @@ label a{
 .icon {
   width: 20px;
   height: 20px;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
 }
 .nav-link {
-  position: relative; 
-  display: inline-block; 
+  position: relative;
+  display: inline-block;
 }
 .nav-link:hover .icon {
   color: #00bfff;
@@ -144,7 +155,7 @@ label a{
   margin: 3rem auto;
   padding: 2rem 1rem;
   background-color: #fff;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
 }
 
@@ -188,7 +199,7 @@ label a{
 }
 
 .cart-item:hover {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .cart-item img {
@@ -227,7 +238,7 @@ input[type="number"] {
 button {
   margin-left: 1rem;
   background-color: #dc3545;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -254,7 +265,7 @@ button:hover {
   margin-top: 1.5rem;
   padding: 0.8rem 1.5rem;
   background-color: #28a745;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   font-weight: bold;
   border-radius: 8px;
   text-decoration: none;
@@ -286,9 +297,9 @@ button:hover {
   }
 }
 .footer {
-        background-color: #000;
-        color: #fff;
-        text-align: center;
-        padding: 1rem;
-      }
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
 </style>

@@ -1,8 +1,10 @@
+<!-- A estrutura do nuxtjs3 é script template o style -->
 <template>
   <div class="card">
     <img :src="product.image" alt="Imagem do produto" class="product-image" />
     <h3 class="product-title">{{ product.title }}</h3>
     <p class="product-price">R$ {{ product.price.toFixed(2) }}</p>
+    <!-- Poderia ter adicionado aria-label -->
     <button class="add-to-cart" @click="$emit('add-to-cart', product)">
       Adicionar ao carrinho
     </button>
@@ -11,8 +13,8 @@
 
 <script setup>
 defineProps({
-  product: Object
-})
+  product: Object,
+});
 </script>
 
 <style scoped>
@@ -56,7 +58,7 @@ defineProps({
 
 .add-to-cart {
   background-color: #0d6efd;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1.2rem;

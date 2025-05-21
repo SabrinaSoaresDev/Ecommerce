@@ -1,6 +1,5 @@
 <template>
   <div class="form-section">
-  </hr>
     <h2>Pagamento</h2>
     <select v-model="modelValue.metodo">
       <option value="">Escolha uma forma de pagamento</option>
@@ -8,15 +7,32 @@
       <option value="debito">Cartão de Débito</option>
       <option value="pix">PIX</option>
     </select>
-    <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.nomeCartao" placeholder="Nome do Cartão" />
-    <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.numeroCartao" placeholder="Número do Cartão" />
-    <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.validade" placeholder="Validade (MM/AA)" />
-    <input v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'" v-model="modelValue.cvv" placeholder="CVV" />
+    <!-- Nao ficou semantico -->
+    <input
+      v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'"
+      v-model="modelValue.nomeCartao"
+      placeholder="Nome do Cartão"
+    />
+    <input
+      v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'"
+      v-model="modelValue.numeroCartao"
+      placeholder="Número do Cartão"
+    />
+    <input
+      v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'"
+      v-model="modelValue.validade"
+      placeholder="Validade (MM/AA)"
+    />
+    <input
+      v-if="modelValue.metodo === 'credito' || modelValue.metodo === 'debito'"
+      v-model="modelValue.cvv"
+      placeholder="CVV"
+    />
   </div>
 </template>
 
 <script setup>
-defineProps(['modelValue'])
+defineProps(["modelValue"]);
 </script>
 <style scoped>
 .form-section {
@@ -54,5 +70,4 @@ input:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
 }
-
-    </style>
+</style>

@@ -8,14 +8,14 @@
 </template>
 
 <script setup>
-import { useCartStore } from '../Stores/cart'
-import { onMounted } from 'vue'
+import { useCartStore } from "../Stores/cart";
+import { onMounted } from "vue";
 
-const cart = useCartStore()
+const cart = useCartStore();
 
 onMounted(() => {
-  cart.clearCart?.()
-})
+  cart.clearCart?.();
+});
 </script>
 
 <style scoped>
@@ -32,7 +32,7 @@ a {
   display: inline-block;
   margin-top: 1.5rem;
   background-color: #28a745;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   text-decoration: none;
