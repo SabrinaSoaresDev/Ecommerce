@@ -1,8 +1,12 @@
+<!-- A estrutura do nuxtjs3 é script template o style -->
 <template>
-  <header>  
+  <header>
+    <!-- Poderia ter componentizado o Header -->
     <div class="header">
+      <!-- Aqui deveria ter o nav -->
       <label><a href="/">Meu E-commerce</a></label>
       <nav class="nav">
+        <!-- Poderia ter feito com ul e li -->
         <NuxtLink to="/">Home</NuxtLink>
         <NuxtLink to="/cart" class="nav-link">
           <ShoppingBagIcon class="icon" />
@@ -12,104 +16,108 @@
     </div>
   </header>
 
-    <main class="content">
-      <Filter :categories="categories" v-model="selectedCategory" />
+  <main class="content">
+    <Filter :categories="categories" v-model="selectedCategory" />
 
-      <h1 class="title">Produtos</h1>
-      <hr class="divider" />
+    <h1 class="title">Produtos</h1>
+    <hr class="divider" />
 
-      <div class="grid">
-        <ProductCard
-          v-for="product in filteredProducts"
-          :key="product.id"
-          :product="product"
-          @add-to-cart="handleAddToCart"
-        />
-      </div>
-      <CartSidebar :visible="showSidebar" @close="showSidebar = false" />
-    </main>
-    <footer class="footer">
-      <p>&copy; 2025 - Meu E-commerce</p>
-    </footer>
+    <div class="grid">
+      <ProductCard
+        v-for="product in filteredProducts"
+        :key="product.id"
+        :product="product"
+        @add-to-cart="handleAddToCart"
+      />
+    </div>
+    <CartSidebar :visible="showSidebar" @close="showSidebar = false" />
+  </main>
+  <!-- Poderia ter componentizado o Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 - Meu E-commerce</p>
+    <!-- Poderia ter pegado o ano dinamico -->
+  </footer>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
-import CartSidebar from '../Components/CartSidebar.vue'
-import { useCartStore } from '../Stores/cart'
-import { useProducts } from '../Composables/useProducts'
-import ProductCard from '../Components/ProductCard.vue'
-import Filter from '../Components/Filter.vue'
-import { useToast } from 'vue-toastification'
-import { useHead } from '#imports'
+// import {
+//   ref,
+//   computed,
+//   onMounted,
+// } from "vue"; /* No nuxtjs isso não precisa ficar declarando */
+import { ShoppingBagIcon } from "@heroicons/vue/24/outline";
+import CartSidebar from "../Components/CartSidebar.vue";
+import { useCartStore } from "../Stores/cart";
+import { useProducts } from "../Composables/useProducts";
+import ProductCard from "../Components/ProductCard.vue";
+import Filter from "../Components/Filter.vue";
+import { useToast } from "vue-toastification";
+import { useHead } from "#imports";
 
-
-const showSidebar = ref(false)
-const cart = useCartStore()
-const { products, fetchProducts } = useProducts()
-const selectedCategory = ref('')
-const toast = useToast()
+const showSidebar = ref(false);
+const cart = useCartStore();
+const { products, fetchProducts } = useProducts();
+const selectedCategory = ref("");
+const toast = useToast();
 
 const cartCount = computed(() =>
   cart.items.reduce((sum, item) => sum + item.quantity, 0)
-)
+);
 useHead({
-  title: 'Meu E-commerce',
-})
+  title: "Meu E-commerce",
+}); /* Poderia colocar isso no arquivo nuxtjs */
 
 function handleAddToCart(product) {
-  cart.addToCart(product)
-  showSidebar.value = true 
-  try{
- toast.success(`${product.title} | Adicionado ao carrinho!`, {
-  position: 'top-left',
-  timeout: 3000,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: false,
-})
-}catch(err){
-
-   toast.error('Erro ao adicionar o produto!', {
-    position: 'top-left',
-    timeout: 2000,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: false,
-  })
+  cart.addToCart(product);
+  showSidebar.value = true;
+  try {
+    toast.success(`${product.title} | Adicionado ao carrinho!`, {
+      position: "top-left",
+      timeout: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: false,
+    });
+  } catch (err) {
+    toast.error("Erro ao adicionar o produto!", {
+      position: "top-left",
+      timeout: 2000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: false,
+    });
+  }
 }
-}
-
- 
-
 
 const categories = computed(() => [
-  ...new Set(products.value.map(p => p.category))
-])
+  ...new Set(products.value.map((p) => p.category)),
+]);
 
 const filteredProducts = computed(() => {
-  if (!selectedCategory.value) return products.value
-  return products.value.filter(p => p.category === selectedCategory.value)
-})
+  /* Aqui poderia ter buscado no endpoint os produtos por categoria categoria!  https://fakestoreapi.com/products/category/jewelery */
+  if (!selectedCategory.value) return products.value;
+  return products.value.filter((p) => p.category === selectedCategory.value);
+});
 
 onMounted(() => {
-  fetchProducts()
-  cart.loadCart()
-})
+  fetchProducts();
+  cart.loadCart();
+});
 </script>
 
 
 <style scoped>
-label a{
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.5rem;
+/* Poderia ter colocado as cores em variaveis */
+/* Poderia ter colocado arquivos de  resete no css*/
+label a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.5rem;
 }
 .page {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f9f9f9;
   color: #333;
   min-height: 100vh;
@@ -117,11 +125,11 @@ label a{
 
 .header {
   background-color: #111;
-  
+
   color: #fff;
   top: 0;
   margin-bottom: 2rem;
-  padding: 1.3rem ;
+  padding: 1.3rem;
   display: flex;
   gap: 2rem;
   font-size: 1.2rem;
@@ -130,8 +138,8 @@ label a{
   position: absolute;
   top: -6px;
   right: -10px;
-  background-color: red;
-  color: white;
+  background-color: red; /* Manter padrão das cores utilizando o hexadecimal */
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   font-size: 0.7rem;
   padding: 2px 6px;
   border-radius: 50%;
@@ -165,11 +173,11 @@ label a{
 .icon {
   width: 20px;
   height: 20px;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
 }
 .nav-link {
-  position: relative; 
-  display: inline-block; 
+  position: relative;
+  display: inline-block;
 }
 .nav-link:hover .icon {
   color: #00bfff;
@@ -201,9 +209,9 @@ label a{
   gap: 1.5rem;
 }
 .footer {
-        background-color: #000;
-        color: #fff;
-        text-align: center;
-        padding: 1rem;
-      }
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
 </style>

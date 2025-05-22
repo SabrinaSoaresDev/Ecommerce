@@ -1,6 +1,7 @@
 <template>
+  <!-- Nao usou o layout -->
   <div>
-    <header class="header" style="background: #000; color: #fff; padding: 1rem;">
+    <header class="header" style="background: #000; color: #fff; padding: 1rem">
       <nav>
         <label>Ecommerce</label>
         <NuxtLink to="/">Home</NuxtLink> |
@@ -10,15 +11,14 @@
     <main>
       <slot />
     </main>
-      <!-- Footer -->
+    <!-- Footer -->
     <footer class="footer">
       <p>&copy; 2025 - Meu E-commerce</p>
     </footer>
   </div>
 </template>
 <script setup>
-  
-    </script>
+</script>
 
 <style scoped>
 .footer {
@@ -86,5 +86,4 @@
 .footer a:focus-visible {
   outline: 2px solid #fff;
 }
-
 </style>

@@ -10,43 +10,48 @@
       </div>
       <div v-else>
         <div v-for="item in cart.items" :key="item.id" class="item">
+          <!-- Poderia ter  componentizado -->
           <img :src="item.image" alt="Produto" />
           <div class="details">
             <p>{{ item.title }}</p>
             <p>R$ {{ item.price.toFixed(2) }}</p>
             <p>
-                Quantidade: 
-                <input
-                    type="number"
-                    min="1"
-                    v-model.number="item.quantity"
-                    @change="updateQuantity(item.id, item.quantity)"
-                />
-                </p>
-            <button class="remove-btn" @click="removeItem(item.id)">Remover</button>
+              Quantidade:
+              <input
+                type="number"
+                min="1"
+                v-model.number="item.quantity"
+                @change="updateQuantity(item.id, item.quantity)"
+              />
+            </p>
+            <!-- Poderia ter adicionado aria-label -->
+            <button class="remove-btn" @click="removeItem(item.id)">
+              Remover
+            </button>
           </div>
         </div>
         <p class="total">Total: R$ {{ total.toFixed(2) }}</p>
       </div>
+      <!-- Poderia ter adicionado aria-label -->
       <button class="finish-btn" @click="goToCart">Finalizar</button>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { useCartStore } from '../Stores/cart'
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useCartStore } from "../Stores/cart";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 
-const props = defineProps({ visible: Boolean })
-const cart = useCartStore()
-const router = useRouter()
+const props = defineProps({ visible: Boolean });
+const cart = useCartStore();
+const router = useRouter();
 
 function goToCart() {
-  router.push('/cart')
+  router.push("/cart");
 }
 function removeItem(id) {
-  cart.removeItem(id)
+  cart.removeItem(id);
 }
 
 function updateQuantity(id, quantity) {
@@ -58,7 +63,7 @@ function updateQuantity(id, quantity) {
 
 const total = computed(() =>
   cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-)
+);
 </script>
 
 <style scoped>
@@ -74,7 +79,6 @@ const total = computed(() =>
   z-index: 1000;
   overflow-y: auto;
 }
-
 
 .cart-header {
   display: flex;
@@ -126,7 +130,7 @@ const total = computed(() =>
 .remove-btn {
   margin-top: 0.3rem;
   background-color: #dc3545;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   border: none;
   padding: 0.3rem 0.6rem;
   border-radius: 5px;
@@ -162,7 +166,7 @@ const total = computed(() =>
   margin-top: 1rem;
   padding: 0.7rem 0;
   background-color: #0d6efd;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   font-weight: bold;
   border: none;
   border-radius: 6px;
@@ -173,5 +177,4 @@ const total = computed(() =>
 .finish-btn:hover {
   background-color: #084ec1;
 }
-
 </style>

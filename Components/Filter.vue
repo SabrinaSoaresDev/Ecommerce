@@ -1,28 +1,31 @@
+<!-- A estrutura do nuxtjs3 é script template o style -->
 <template>
   <div class="filter">
     <label for="category">Filtrar por categoria:</label>
     <select id="category" v-model="selected" class="select">
       <option value="">Todas</option>
-      <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+      <option v-for="cat in categories" :key="cat" :value="cat">
+        {{ cat }}
+      </option>
     </select>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+// import { ref, watch } from 'vue' /* No nuxtjs isso não precisa ficar declarando */
 
 const props = defineProps({
   categories: Array,
-  modelValue: String
-})
+  modelValue: String,
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
-const selected = ref(props.modelValue)
+const selected = ref(props.modelValue);
 
 watch(selected, (value) => {
-  emit('update:modelValue', value)
-})
+  emit("update:modelValue", value);
+});
 </script>
 
 <style scoped>

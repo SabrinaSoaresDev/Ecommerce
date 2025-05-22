@@ -7,8 +7,13 @@
         <h3>Endereço de Entrega:</h3>
         <template v-if="endereco.rua">
           <p>{{ endereco.nome }}</p>
-          <p>{{ endereco.rua }}, {{ endereco.numero }} {{ endereco.complemento ? '- ' + endereco.complemento : '' }}</p>
-          <p>{{ endereco.bairro }}, {{ endereco.cidade }} - {{ endereco.estado }}</p>
+          <p>
+            {{ endereco.rua }}, {{ endereco.numero }}
+            {{ endereco.complemento ? "- " + endereco.complemento : "" }}
+          </p>
+          <p>
+            {{ endereco.bairro }}, {{ endereco.cidade }} - {{ endereco.estado }}
+          </p>
           <p>CEP: {{ endereco.cep }}</p>
         </template>
         <p v-else class="empty-info">Nenhum endereço informado</p>
@@ -33,7 +38,7 @@
       </div>
     </div>
 
-    <button 
+    <button
       @click="confirmar"
       :disabled="loading"
       :class="{ 'loading-button': loading }"
@@ -49,29 +54,29 @@
 </template>
 
 <script setup>
-const emit = defineEmits(['confirmar'])
+const emit = defineEmits(["confirmar"]);
 
 const props = defineProps({
   endereco: {
     type: Object,
-    required: true
+    required: true,
   },
   pagamento: {
     type: Object,
-    required: true
+    required: true,
   },
   total: {
     type: Number,
-    required: true
+    required: true,
   },
   loading: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 function confirmar() {
-  emit('confirmar')
+  emit("confirmar");
 }
 </script>
 
@@ -82,7 +87,7 @@ function confirmar() {
   background-color: #f8f9fa;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   max-width: 600px;
   margin: auto;
 }
@@ -106,7 +111,7 @@ function confirmar() {
 
 button {
   background-color: #28a745;
-  color: white;
+  color: white; /* Manter padrão das cores utilizando o hexadecimal */
   padding: 1rem 2rem;
   border: none;
   border-radius: 8px;
